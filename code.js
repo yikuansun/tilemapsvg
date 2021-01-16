@@ -43,6 +43,7 @@ function levelInit(levelstring) {
                 playerRect.setAttribute("width", 30); playerRect.setAttribute("height", 50);
                 playerCoords = [c * 40, r * 40];
                 playerRect.setAttribute("x", c * 40); playerRect.setAttribute("y", r * 40);
+                playerRect.setAttribute("rx", 30 / 2);
                 scrollelems.appendChild(playerRect);
             }
             else if (row[c] == "#") {
