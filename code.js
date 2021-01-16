@@ -129,10 +129,10 @@ function detect_platform_collisions() {
 
 function setscrolling(playerxpos, levelwidth) {
     if ((-(playerxpos - 426)) < 0 && (-(playerxpos - 426)) > -levelwidth + 852) {
-        scrollelems.setAttribute("transform", "translate(" + (-(playerxpos - 426)).toString() + ", 0)");
+        scrollelems.setAttribute("transform", "translate(" + Math.floor(-(playerxpos - 426)).toString() + ", 0)");
     }
     else {
-        scrollelems.setAttribute("transform", "translate(" + (((-(playerxpos - 426)) > 0)?0:-levelwidth + 852).toString() + ", 0)");
+        scrollelems.setAttribute("transform", "translate(" + Math.floor(((-(playerxpos - 426)) > 0)?0:-levelwidth + 852).toString() + ", 0)");
     }
 }
 
