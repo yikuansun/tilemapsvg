@@ -33,10 +33,12 @@ function levelInit(levelstring) {
     scrollelems = document.createElementNS(svgns, "g");
     document.getElementById("gameframe").appendChild(scrollelems);
 
-    for (r = 0; r < 12; r++) {
-        row = my_level.split("\n")[r].split("");
-        for (c = 0; c < row.length; c++) {
-            if (row[c] == "@") {
+    theMatrix = [];
+    for (r = 0; r < 12; r++) { theMatrix.push(my_level.split("\n")[r].split("")); };
+
+    for (r = 0; r < theMatrix.length; r++) {
+        for (c = 0; c < theMatrix[r].length; c++) {
+            if (theMatrix[r][c] == "@") {
                 playerRect = document.createElementNS(svgns, "rect");
                 playerRect.style.fill = "rgb(0, 20, 100)";
                 playerRect.setAttribute("width", 30); playerRect.setAttribute("height", 50);
@@ -44,7 +46,7 @@ function levelInit(levelstring) {
                 playerRect.setAttribute("rx", 30 / 2);
                 scrollelems.appendChild(playerRect);
             }
-            else if (row[c] == "#") {
+            else if (theMatrix[r][c] == "#") {
                 buildPlatform(c * 40, r * 40, 40, 40);
             }
         }
