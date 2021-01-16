@@ -1,6 +1,5 @@
 svgns = "http://www.w3.org/2000/svg";
 
-playerCoords = [];
 velocity_up = 0;
 velocity_right = 0;
 
@@ -41,7 +40,6 @@ function levelInit(levelstring) {
                 playerRect = document.createElementNS(svgns, "rect");
                 playerRect.style.fill = "rgb(0, 20, 100)";
                 playerRect.setAttribute("width", 30); playerRect.setAttribute("height", 50);
-                playerCoords = [c * 40, r * 40];
                 playerRect.setAttribute("x", c * 40); playerRect.setAttribute("y", r * 40);
                 playerRect.setAttribute("rx", 30 / 2);
                 scrollelems.appendChild(playerRect);
@@ -93,31 +91,29 @@ function detect_platform_collisions() {
         touching_right: false
     };
 
-    player_pos_grid = [, Math.floor(playerCoords[1] / 40)];
-
-    for (c = Math.floor(playerCoords[0] / 40) - 2; c < Math.ceil(playerCoords[0] / 40) + 2; c++) {
-        for (r = Math.floor(playerCoords[1] / 40) - 2; r < Math.ceil(playerCoords[1] / 40) + 2; r++) {
+    for (c = Math.floor(parseFloat(playerRect.getAttribute("x")) / 40) - 2; c < Math.ceil(parseFloat(playerRect.getAttribute("x")) / 40) + 2; c++) {
+        for (r = Math.floor(parseFloat(playerRect.getAttribute("y")) / 40) - 2; r < Math.ceil(parseFloat(playerRect.getAttribute("y")) / 40) + 2; r++) {
             platform = document.getElementById(c.toString() + "::" + r.toString());
             if (platform) {
                 if (touching(playerRect, platform)) {
                     collision = touching_direction(playerRect, platform);
                     if (collision == "left") {
                         out.touching_left = true;
-                        playerCoords[0] = parseFloat(platform.getAttribute("x")) - parseFloat(playerRect.getAttribute("width"));
+                        playerRect.setAttribute("x", parseFloat(platform.getAttribute("x")) - parseFloat(playerRect.getAttribute("width")));
                         velocity_right = 0;
                     }
                     else if (collision == "right") {
                         out.touching_right = true;
-                        playerCoords[0] =  parseFloat(platform.getAttribute("x")) + parseFloat(platform.getAttribute("width"));
+                        playerRect.setAttribute("x",  parseFloat(platform.getAttribute("x")) + parseFloat(platform.getAttribute("width")));
                         velocity_right = 0;
                     }
                     else if (collision == "bottom") {
                         out.touching_bottom = true;
-                        playerCoords[1] = parseFloat(platform.getAttribute("y")) + parseFloat(platform.getAttribute("height"));
+                        playerRect.setAttribute("y", parseFloat(platform.getAttribute("y")) + parseFloat(platform.getAttribute("height")));
                     }
                     else if (collision == "top") {
                         out.touching_top = true;
-                        playerCoords[1] = parseFloat(platform.getAttribute("y")) - parseFloat(playerRect.getAttribute("height"));
+                        playerRect.setAttribute("y", parseFloat(platform.getAttribute("y")) - parseFloat(playerRect.getAttribute("height")));
                     }
                 }
             }
@@ -174,14 +170,12 @@ function load() {
 
     velocity_right *= 0.75;
     
-    playerCoords[1] -= velocity_up;
+    playerRect.setAttribute("y", Math.floor(parseFloat(playerRect.getAttribute("y")) - velocity_up));
     if (Math.abs(velocity_right) >= 0.5) {
-        playerCoords[0] += velocity_right;
+        playerRect.setAttribute("x", Math.floor(parseFloat(playerRect.getAttribute("x")) + velocity_right));
     }
-    
-    playerRect.setAttribute("x", playerCoords[0]); playerRect.setAttribute("y", playerCoords[1]);
 
-    setscrolling(playerCoords[0], my_level.split("\n")[0].split("").length * 40);
+    setscrolling(parseFloat(playerRect.getAttribute("x")), my_level.split("\n")[0].split("").length * 40);
 
     requestAnimationFrame(load);
 
