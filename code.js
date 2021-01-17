@@ -148,7 +148,7 @@ function enemyscript() {
             }
         } else {
             enemy.setAttribute("x", Math.floor(parseFloat(enemy.getAttribute("x")) + 1));
-            focused_x = Math.ceil(parseFloat(enemy.getAttribute("x")) / 40);
+            focused_x = Math.ceil(parseFloat(enemy.getAttribute("x") - (40 - 30)) / 40);
             focused_y = Math.floor(parseFloat(enemy.getAttribute("y")) / 40) + 1;
             focused_brick_wall = document.getElementById(focused_x.toString() + "::" + focused_y.toString());
             focused_brick_gap = document.getElementById(focused_x.toString() + "::" + (focused_y + 1).toString());
