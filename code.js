@@ -176,6 +176,20 @@ window.addEventListener("keyup", function(e) {
     map[e.key] = false;
 });
 
+cursorpos = [0, 0];
+//cursorposdisplay = document.createElement("b");
+//document.body.appendChild(cursorposdisplay);
+window.addEventListener("mousemove", function(e) {
+    posOffsetData = document.getElementById("gameframe").getBoundingClientRect();
+    cursorpos[0] = e.clientX - posOffsetData.x - parseInt(scrollelems.getAttribute("transform").split("translate(")[1]);
+    cursorpos[1] = e.clientY - posOffsetData.y;
+    //cursorposdisplay.innerText = cursorpos.join(", ");
+});
+clicked = false;
+document.getElementById("gameframe").addEventListener("click", function(e) {
+    clicked = true;
+});
+
 function load() {
 
     collisions = detect_platform_collisions();
@@ -211,6 +225,10 @@ function load() {
     playerRect.setAttribute("y", Math.floor(parseFloat(playerRect.getAttribute("y")) - velocity_up));
     if (Math.abs(velocity_right) >= 0.5) {
         playerRect.setAttribute("x", Math.floor(parseFloat(playerRect.getAttribute("x")) + velocity_right));
+    }
+
+    if (clicked) {
+        clicked = false;
     }
 
     setscrolling(parseFloat(playerRect.getAttribute("x")), my_level.split("\n")[0].split("").length * 40);
