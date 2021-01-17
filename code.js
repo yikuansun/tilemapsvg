@@ -135,6 +135,7 @@ function detect_platform_collisions() {
     return out;
 }
 
+playerTouchingEnemy = false;
 function enemyscript() {
     for (enemy of document.getElementsByClassName("enemytype1")) {
         if (enemy.dataset.direction == "left") {
@@ -155,6 +156,9 @@ function enemyscript() {
             if (document.body.contains(focused_brick_wall) || !(document.body.contains(focused_brick_gap))) {
                 enemy.dataset.direction = "left";
             }
+        }
+        if (touching(enemy, playerRect)) {
+            playerTouchingEnemy = true;
         }
     }
 }
@@ -279,7 +283,12 @@ function load() {
 
     setscrolling(parseFloat(playerRect.getAttribute("x")), my_level.split("\n")[0].split("").length * 40);
 
-    requestAnimationFrame(load);
+    if (parseFloat(playerRect.getAttribute("y")) > 480 || playerTouchingEnemy) {
+        alert("loser");
+    }
+    else {
+        requestAnimationFrame(load);
+    }
 
 }
 
