@@ -231,16 +231,15 @@ window.addEventListener("keyup", function(e) {
 });
 
 cursorpos = [0, 0];
-//cursorposdisplay = document.createElement("b");
-//document.body.appendChild(cursorposdisplay);
-window.addEventListener("mousemove", function(e) {
+updateCursorPos = function(e) {
     posOffsetData = document.getElementById("gameframe").getBoundingClientRect();
     cursorpos[0] = e.clientX - posOffsetData.x - parseInt(scrollelems.getAttribute("transform").split("translate(")[1]);
     cursorpos[1] = e.clientY - posOffsetData.y;
-    //cursorposdisplay.innerText = cursorpos.join(", ");
-});
+}
+window.addEventListener("mousemove", updateCursorPos);
 clicked = false;
 document.getElementById("gameframe").addEventListener("click", function(e) {
+    updateCursorPos(e);
     clicked = true;
 });
 
