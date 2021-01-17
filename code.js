@@ -11,7 +11,7 @@ my_level = `........................................
 ........................................
 ........................................
 ........#..###..####..#.................
-.......##.............##................
+.......##.............##..............P.
 .@....#.#............>#.#...............
 ########################################
 ########################################`;
@@ -58,6 +58,23 @@ function levelInit(levelstring) {
                 enemy.setAttribute("class", "enemytype1");
                 enemy.dataset.direction = "left";
                 scrollelems.appendChild(enemy);
+            }
+            else if (theMatrix[r][c] == "P") {
+                goal = document.createElementNS(svgns, "rect");
+                goal.style.fill = "rgb(0, 255, 0)";
+                goal.setAttribute("width", 50); goal.setAttribute("height", 50);
+                goal.setAttribute("x", c * 40 - (50 - 40) / 2); goal.setAttribute("y", r * 40 - (50 - 40) / 2);
+                scrollelems.appendChild(goal);
+                goalAnime = document.createElementNS(svgns, "animateTransform");
+                goalAnime.setAttribute("attributeType", "xml");
+                goalAnime.setAttribute("attributeName", "transform");
+                goalAnime.setAttribute("type", "rotate");
+                goalAnime.setAttribute("from", "0 " + (c * 40 + 20).toString() + " " + (r * 40 + 20).toString());
+                goalAnime.setAttribute("to", "360 " + (c * 40 + 20).toString() + " " + (r * 40 + 20).toString());
+                goalAnime.setAttribute("dur", "5s");
+                goalAnime.setAttribute("additive", "sum");
+                goalAnime.setAttribute("repeatCount", "indefinite");
+                goal.appendChild(goalAnime);
             }
         }
     }
@@ -227,6 +244,8 @@ document.getElementById("gameframe").addEventListener("click", function(e) {
     clicked = true;
 });
 
+frame = 0;
+
 function load() {
 
     collisions = detect_platform_collisions();
@@ -286,9 +305,19 @@ function load() {
     if (parseFloat(playerRect.getAttribute("y")) > 480 || playerTouchingEnemy) {
         alert("loser");
     }
+    else if (frame % 21 == 0) {
+        if (touching(playerRect, goal)) {
+            alert("winner");
+        }
+        else {
+            requestAnimationFrame(load);
+        }
+    }
     else {
         requestAnimationFrame(load);
     }
+
+    frame++;
 
 }
 
