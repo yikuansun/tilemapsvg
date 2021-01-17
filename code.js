@@ -255,11 +255,6 @@ function load() {
     }
 
     velocity_right *= 0.75;
-    
-    playerRect.setAttribute("y", Math.floor(parseFloat(playerRect.getAttribute("y")) - velocity_up));
-    if (Math.abs(velocity_right) >= 0.5) {
-        playerRect.setAttribute("x", Math.floor(parseFloat(playerRect.getAttribute("x")) + velocity_right));
-    }
 
     if (clicked) {
         clicked = false;
@@ -270,8 +265,16 @@ function load() {
         bullet.setAttribute("x", parseFloat(playerRect.getAttribute("x")) + 15);
         bullet.setAttribute("y", parseFloat(playerRect.getAttribute("y")) + 25);
         scrollelems.appendChild(bullet);
-        bullet.dataset.angle = Math.atan2((parseFloat(bullet.getAttribute("y")) - cursorpos[1]) , (cursorpos[0] - parseFloat(bullet.getAttribute("x"))));
+        fireangle = Math.atan2((parseFloat(bullet.getAttribute("y")) - cursorpos[1]) , (cursorpos[0] - parseFloat(bullet.getAttribute("x"))));
+        bullet.dataset.angle = fireangle;
         bullet.setAttribute("class", "bullet");
+        velocity_right -= 2 * Math.cos(fireangle);
+        velocity_up -= 2 * Math.sin(fireangle);
+    }
+    
+    playerRect.setAttribute("y", Math.floor(parseFloat(playerRect.getAttribute("y")) - velocity_up));
+    if (Math.abs(velocity_right) >= 0.5) {
+        playerRect.setAttribute("x", Math.floor(parseFloat(playerRect.getAttribute("x")) + velocity_right));
     }
 
     setscrolling(parseFloat(playerRect.getAttribute("x")), my_level.split("\n")[0].split("").length * 40);
