@@ -162,10 +162,10 @@ function enemyscript() {
 function bulletscript() {
     speed = 10;
     for (bullet of document.getElementsByClassName("bullet")) {
-        bulletx = parseFloat(bullet.getAttribute("cx"));
-        bullety = parseFloat(bullet.getAttribute("cy"));
-        bullet.setAttribute("cx", Math.floor(bulletx + Math.cos(bullet.dataset.angle) * speed));
-        bullet.setAttribute("cy", Math.floor(bullety - Math.sin(bullet.dataset.angle) * speed));
+        bulletx = parseFloat(bullet.getAttribute("x"));
+        bullety = parseFloat(bullet.getAttribute("y"));
+        bullet.setAttribute("x", Math.floor(bulletx + Math.cos(bullet.dataset.angle) * speed));
+        bullet.setAttribute("y", Math.floor(bullety - Math.sin(bullet.dataset.angle) * speed));
     }
 }
 
@@ -240,12 +240,14 @@ function load() {
 
     if (clicked) {
         clicked = false;
-        bullet = document.createElementNS(svgns, "circle");
-        bullet.setAttribute("r", 5);
-        bullet.setAttribute("cx", parseFloat(playerRect.getAttribute("x")) + 15);
-        bullet.setAttribute("cy", parseFloat(playerRect.getAttribute("y")) + 25);
+        bullet = document.createElementNS(svgns, "rect");
+        bullet.setAttribute("width", 10);
+        bullet.setAttribute("height", 10);
+        bullet.setAttribute("rx", 5);
+        bullet.setAttribute("x", parseFloat(playerRect.getAttribute("x")) + 15);
+        bullet.setAttribute("y", parseFloat(playerRect.getAttribute("y")) + 25);
         scrollelems.appendChild(bullet);
-        bullet.dataset.angle = Math.atan2((parseFloat(bullet.getAttribute("cy")) - cursorpos[1]) , (cursorpos[0] - parseFloat(bullet.getAttribute("cx"))));
+        bullet.dataset.angle = Math.atan2((parseFloat(bullet.getAttribute("y")) - cursorpos[1]) , (cursorpos[0] - parseFloat(bullet.getAttribute("x"))));
         bullet.setAttribute("class", "bullet");
     }
 
