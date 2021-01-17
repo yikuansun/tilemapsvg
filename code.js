@@ -12,7 +12,7 @@ my_level = `........................................
 ........................................
 ........#..###..####..#.................
 .......##.............##................
-.@....#.#.............#.#...............
+.@....#.#............>#.#...............
 ########################################
 ########################################`;
 
@@ -48,6 +48,16 @@ function levelInit(levelstring) {
             }
             else if (theMatrix[r][c] == "#") {
                 buildPlatform(c * 40, r * 40, 40, 40);
+            }
+            else if (theMatrix[r][c] == ">") {
+                enemy = document.createElementNS(svgns, "rect");
+                enemy.style.fill = "rgb(100, 20, 0)";
+                enemy.setAttribute("width", 30); enemy.setAttribute("height", 50);
+                enemy.setAttribute("x", c * 40); enemy.setAttribute("y", r * 40 - (50 - 40));
+                enemy.setAttribute("rx", 30 / 2);
+                enemy.setAttribute("class", "enemytype1");
+                enemy.dataset.direction = "left";
+                scrollelems.appendChild(enemy);
             }
         }
     }
@@ -125,6 +135,30 @@ function detect_platform_collisions() {
     return out;
 }
 
+function enemyscript() {
+    for (enemy of document.getElementsByClassName("enemytype1")) {
+        if (enemy.dataset.direction == "left") {
+            enemy.setAttribute("x", Math.floor(parseFloat(enemy.getAttribute("x")) - 1));
+            focused_x = Math.floor(parseFloat(enemy.getAttribute("x")) / 40);
+            focused_y = Math.floor(parseFloat(enemy.getAttribute("y")) / 40) + 1;
+            focused_brick_wall = document.getElementById(focused_x.toString() + "::" + focused_y.toString());
+            focused_brick_gap = document.getElementById(focused_x.toString() + "::" + (focused_y + 1).toString());
+            if (document.body.contains(focused_brick_wall) || !(document.body.contains(focused_brick_gap))) {
+                enemy.dataset.direction = "right";
+            }
+        } else {
+            enemy.setAttribute("x", Math.floor(parseFloat(enemy.getAttribute("x")) + 1));
+            focused_x = Math.ceil(parseFloat(enemy.getAttribute("x")) / 40);
+            focused_y = Math.floor(parseFloat(enemy.getAttribute("y")) / 40) + 1;
+            focused_brick_wall = document.getElementById(focused_x.toString() + "::" + focused_y.toString());
+            focused_brick_gap = document.getElementById(focused_x.toString() + "::" + (focused_y + 1).toString());
+            if (document.body.contains(focused_brick_wall) || !(document.body.contains(focused_brick_gap))) {
+                enemy.dataset.direction = "left";
+            }
+        }
+    }
+}
+
 function setscrolling(playerxpos, levelwidth) {
     if ((-(playerxpos - 426)) < 0 && (-(playerxpos - 426)) > -levelwidth + 852) {
         scrollelems.setAttribute("transform", "translate(" + Math.floor(-(playerxpos - 426)).toString() + ", 0)");
@@ -145,6 +179,8 @@ window.addEventListener("keyup", function(e) {
 function load() {
 
     collisions = detect_platform_collisions();
+
+    enemyscript();
 
     if (collisions.touching_bottom) {
         velocity_up = -1;
