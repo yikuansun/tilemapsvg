@@ -159,6 +159,16 @@ function enemyscript() {
     }
 }
 
+function bulletscript() {
+    speed = 10;
+    for (bullet of document.getElementsByClassName("bullet")) {
+        bulletx = parseFloat(bullet.getAttribute("cx"));
+        bullety = parseFloat(bullet.getAttribute("cy"));
+        bullet.setAttribute("cx", Math.floor(bulletx + Math.cos(bullet.dataset.angle) * speed));
+        bullet.setAttribute("cy", Math.floor(bullety - Math.sin(bullet.dataset.angle) * speed));
+    }
+}
+
 function setscrolling(playerxpos, levelwidth) {
     if ((-(playerxpos - 426)) < 0 && (-(playerxpos - 426)) > -levelwidth + 852) {
         scrollelems.setAttribute("transform", "translate(" + Math.floor(-(playerxpos - 426)).toString() + ", 0)");
@@ -195,6 +205,7 @@ function load() {
     collisions = detect_platform_collisions();
 
     enemyscript();
+    bulletscript();
 
     if (collisions.touching_bottom) {
         velocity_up = -1;
@@ -229,6 +240,13 @@ function load() {
 
     if (clicked) {
         clicked = false;
+        bullet = document.createElementNS(svgns, "circle");
+        bullet.setAttribute("r", 5);
+        bullet.setAttribute("cx", parseFloat(playerRect.getAttribute("x")) + 15);
+        bullet.setAttribute("cy", parseFloat(playerRect.getAttribute("y")) + 25);
+        scrollelems.appendChild(bullet);
+        bullet.dataset.angle = Math.atan2((parseFloat(bullet.getAttribute("cy")) - cursorpos[1]) , (cursorpos[0] - parseFloat(bullet.getAttribute("cx"))));
+        bullet.setAttribute("class", "bullet");
     }
 
     setscrolling(parseFloat(playerRect.getAttribute("x")), my_level.split("\n")[0].split("").length * 40);
