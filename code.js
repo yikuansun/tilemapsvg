@@ -214,7 +214,7 @@ function bulletscript() {
 }
 
 function setscrolling(playerxpos, levelwidth) {
-    if ((-(playerxpos - 426)) < 0 && (-(playerxpos - 426)) > -levelwidth + 852) {
+    if ((-(playerxpos - 426)) <= 0 && (-(playerxpos - 426)) >= -levelwidth + 852) {
         scrollelems.setAttribute("transform", "translate(" + Math.floor(-(playerxpos - 426)).toString() + ", 0)");
     }
     else {
